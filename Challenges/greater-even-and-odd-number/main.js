@@ -6,8 +6,13 @@ const mainFunction = (input) => {
     if (arr.length - 2 < index) return;
     posibleNumbers.push(Number(`${digit}${arr[index + 1]}`));
   });
-  posibleNumbers.sort((a, b) => b - a);
-  const evenNumbers = posibleNumbers.filter((num) => num % 2 === 0);
-  const oddNumbers = posibleNumbers.filter((num) => num % 2 !== 0);
-  return [evenNumbers[0], oddNumbers[0]];
+  const maxEvenNumber = Math.max(
+    ...posibleNumbers.filter((num) => num % 2 === 0)
+  );
+  const maxOddNumber = Math.max(
+    ...posibleNumbers.filter((num) => num % 2 !== 0)
+  );
+  return [maxEvenNumber, maxOddNumber];
 };
+
+console.log(mainFunction('726437856347856837657834'));

@@ -7,8 +7,9 @@ def main_function(input: str):
         if len(all_digits) - 2 < index:
             break
         possible_numbers.append(int(f'{digit}{all_digits[index + 1]}'))
-    # TODO: finish exercise
-    return possible_numbers
+    max_even_number = max(list(filter(lambda x: x % 2 == 0, possible_numbers)))
+    max_odd_number = max(list(filter(lambda x: x % 2 != 0, possible_numbers)))
+    return [max_even_number, max_odd_number]
 
 
-print(main_function('3434534534'))
+print(main_function('726437856347856837657834'))
