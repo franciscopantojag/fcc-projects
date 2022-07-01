@@ -1,4 +1,3 @@
-# Do NOT edit nor remove any existing code when testing or submitting
 def find_product_digits(input: int):
     str_input = str(input)
     result = 1

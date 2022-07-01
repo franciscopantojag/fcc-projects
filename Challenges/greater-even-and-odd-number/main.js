@@ -1,4 +1,3 @@
-// Do NOT edit nor remove any existing code when testing or submitting
 const mainFunction = (input) => {
   if (typeof input !== 'string') throw 'Invalid input';
   const allDigits = input.split('').map(Number);
