@@ -23,7 +23,7 @@ app.get("/api/hello", function (req, res) {
   res.json({ greeting: "hello API" });
 });
 
-app.get("/api/timestamp/:date?", (req, res) => {
+app.get("/api/:date?", (req, res) => {
   const regex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}$/;
   const regex2 = /^[0-9]+$/;
   const curr = new Date(Date.now());
