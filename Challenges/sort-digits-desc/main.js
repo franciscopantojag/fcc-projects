@@ -1,6 +1,3 @@
-const mainFunction = (input) =>
-  input
-    .split('')
-    .map((str) => Number(str))
-    .sort((a, b) => b - a)
-    .join('');
+const mainFunction = (input) => input.split('').sort().reverse().join('');
+
+console.log(mainFunction('674391'));
