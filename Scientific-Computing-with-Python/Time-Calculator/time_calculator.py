@@ -18,22 +18,17 @@ def add_time(start: str, duration: str, day_of_week: str = None):
     raw_result_hours = start_hour_24 + duration_hour
     raw_result_minutes = start_minutes + duration_minutes
 
-    result_days = int(raw_result_hours / 24)
-
-    result_hours = raw_result_hours % 24
     result_minutes = raw_result_minutes % 60
-    plus_hours = int(raw_result_minutes/60)
 
-    raw_result_hours = result_hours + plus_hours
-    result_hours = raw_result_hours % 24
+    result_plus = (raw_result_hours % 24) + (int(raw_result_minutes/60))
 
-    plus_result_days = int(raw_result_hours / 24)
-    result_days = result_days + plus_result_days
+    result_days = int(raw_result_hours / 24) + int(result_plus / 24)
+
+    result_hours = result_plus % 24
 
     final_result_am = result_hours < 12
     final_result_am_pm = 'AM' if final_result_am else 'PM'
     final_result_hours = result_hours if final_result_am else result_hours - 12
-
     if final_result_hours == 0:
         final_result_hours = 12
 
