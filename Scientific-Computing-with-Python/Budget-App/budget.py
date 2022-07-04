@@ -1,11 +1,5 @@
 from math import ceil
-
-
-def get_str_char_or_space(input: str, index):
-    try:
-        return input[index]
-    except:
-        return ' '
+from helpers import get_str_char_or_space
 
 
 class Category:
@@ -26,7 +20,7 @@ class Category:
             chars_right = ceil(chars_middle_len) * '*'
             first_line = f'{chars_left}{self.name}{chars_right}'
         rows = [first_line]
-        last_line = f'Total: {self.get_balance()}'
+
         for deposit in self.ledger:
             description = deposit['description']
             amount = deposit['amount']
@@ -48,6 +42,8 @@ class Category:
                 amount_str = f'{spaces_amount}{amount_str}'
 
             rows.append(f'{description}{amount_str}')
+
+        last_line = f'Total: {self.get_balance()}'
         rows.append(last_line)
         return '\n'.join(rows)
 
@@ -90,14 +86,15 @@ class Category:
 def create_spend_chart(categories: 'list[Category]'):
     categories_data = []
     total_spent = sum(map(lambda x: x.get_spent(), categories))
-    rows_num = 12 + max(map(lambda x: len(x.name), categories))
-    rows = ['Percentage spent by category']
+
     for category in categories:
         category_percent = int(
             ((category.get_spent() / total_spent) * 100) / 10) * 10
         category_data = {'name': category.name, 'percent': category_percent}
         categories_data.append(category_data)
 
+    rows_num = 12 + max(map(lambda x: len(x.name), categories))
+    rows = ['Percentage spent by category']
     dashes = ((3 * len(categories_data)) + 1) * '-'
     left_spaces_words = 5 * ' '
 
@@ -106,33 +103,29 @@ def create_spend_chart(categories: 'list[Category]'):
 
         if n == -10:
             rows.append(f'    {dashes}')
-
-        elif n >= 0:
+        else:
             row_bullets = ''
             row_word = ''
             letter_index = i - 12
 
             for category_data in categories_data:
+                category_name = category_data.get('name')
+                row_word += f'{get_str_char_or_space(category_name, letter_index)}  '
                 amount = category_data.get('percent')
                 plus = 'o  '
                 if n > amount:
                     plus = '   '
                 row_bullets += plus
 
-            str_n = str(n)
-            if n < 100 and n >= 10:
-                str_n = f' {str_n}'
-            elif n < 10:
-                str_n = f'  {str_n}'
-            rows.append(f'{str_n}| {row_bullets}')
-        else:
-            row_word = ''
-            letter_index = i - 12
-            for index, category_data in enumerate(categories_data):
-                category_name = category_data.get('name')
-                row_word += f'{get_str_char_or_space(category_name, letter_index)}  '
-            rows.append(f'{left_spaces_words}{row_word}')
-    print(rows)
+            if n >= 0:
+                str_n = str(n)
+                if n < 100 and n >= 10:
+                    str_n = f' {str_n}'
+                elif n < 10:
+                    str_n = f'  {str_n}'
+                rows.append(f'{str_n}| {row_bullets}')
+            else:
+                rows.append(f'{left_spaces_words}{row_word}')
     return '\n'.join(rows)
 
 
@@ -150,5 +143,3 @@ test_3.withdraw(10.99)
 
 print(create_spend_chart([test_3, test, test_2]))
 print("Percentage spent by category\n100|          \n 90|          \n 80|          \n 70|    o     \n 60|    o     \n 50|    o     \n 40|    o     \n 30|    o     \n 20|    o  o  \n 10|    o  o  \n  0| o  o  o  \n    ----------\n     B  F  E  \n     u  o  n  \n     s  o  t  \n     i  d  e  \n     n     r  \n     e     t  \n     s     a  \n     s     i  \n           n  \n           m  \n           e  \n           n  \n           t  ")
-column_one = '0\n1\n'
-column_two = '4\n6\n'
