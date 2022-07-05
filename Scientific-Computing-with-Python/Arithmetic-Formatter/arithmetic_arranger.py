@@ -27,7 +27,7 @@ def arithmetic_arranger(problems: 'list[str]', calculate_result=False):
             if operand_len > 4:
                 return 'Error: Numbers cannot be more than four digits.'
 
-        result = sum(map(lambda x: int(x), operands))
+        result = sum(int(x) for x in operands)
         if operator == '-':
             result = int(operands[0]) - int(operands[1])
 

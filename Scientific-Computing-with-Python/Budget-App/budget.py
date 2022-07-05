@@ -1,99 +1,12 @@
-from math import ceil
-from helpers import get_str_char_or_space
-
-
-class Category:
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.ledger = []
-
-    def __str__(self) -> str:
-        LEN_LINE = 30
-        chars_number = LEN_LINE - len(self.name)
-        first_line = None
-        if chars_number < 0:
-            chars_number = 0
-            first_line = 30 * '*'
-        else:
-            chars_middle_len = chars_number / 2
-            chars_left = int(chars_middle_len) * '*'
-            chars_right = ceil(chars_middle_len) * '*'
-            first_line = f'{chars_left}{self.name}{chars_right}'
-        rows = [first_line]
-
-        for deposit in self.ledger:
-            description = deposit['description']
-            amount = deposit['amount']
-            len_description = len(description)
-            spaces_description = ''
-            if len_description > 23:
-                description = description[0:23]
-            else:
-                spaces_description = (23 - len_description) * ' '
-                description = f'{description}{spaces_description}'
-
-            amount_str = f'{amount:.2f}'
-            len_amount = len(amount_str)
-            spaces_amount = ''
-            if len_amount > 7:
-                amount_str = amount_str[0:7]
-            else:
-                spaces_amount = (7 - len_amount) * ' '
-                amount_str = f'{spaces_amount}{amount_str}'
-
-            rows.append(f'{description}{amount_str}')
-
-        last_line = f'Total: {self.get_balance()}'
-        rows.append(last_line)
-        return '\n'.join(rows)
-
-    def deposit(self, amount: 'int | float', description: str = ''):
-        self.ledger.append({'amount': amount, 'description': description})
-
-    def get_balance(self):
-        return sum(map(lambda x: x.get('amount') or 0, self.ledger))
-
-    def withdraw(self, amount: 'int | float', description: str = ''):
-        withdraw_result = self.check_funds(amount)
-        if not withdraw_result:
-            return False
-        self.ledger.append({'amount': -amount, 'description': description})
-        return True
-
-    def transfer(self,  amount: 'int | float', destination: 'Category'):
-        withdraw_result = self.withdraw(
-            amount, f'Transfer to {destination.name}')
-        if not withdraw_result:
-            return False
-        destination.deposit(amount, f'Transfer from {self.name}')
-        return True
-
-    def check_funds(self, amount: 'int|float'):
-        balance = self.get_balance()
-        if not balance >= amount:
-            return False
-        return True
-
-    def get_spent(self):
-        spent = 0
-        for operation in self.ledger:
-            amount = operation['amount']
-            if amount < 0:
-                spent += (amount * -1)
-        return spent
+from helpers import get_str_char_or_space, build_category_data
+from classes import Category
 
 
 def create_spend_chart(categories: 'list[Category]'):
-    categories_data = []
-    total_spent = sum(map(lambda x: x.get_spent(), categories))
+    total_spent = sum(x.get_spent() for x in categories)
 
-    for category in categories:
-        category_percent = int(
-            ((category.get_spent() / total_spent) * 100) / 10) * 10
-        category_data = {'name': category.name, 'percent': category_percent}
-        categories_data.append(category_data)
-
-    rows_num = 12 + max(map(lambda x: len(x.name), categories))
+    categories_data = [build_category_data(x, total_spent) for x in categories]
+    rows_num = 12 + max(len(x.name) for x in categories)
     rows = ['Percentage spent by category']
     dashes = ((3 * len(categories_data)) + 1) * '-'
     left_spaces_words = 5 * ' '
@@ -109,9 +22,9 @@ def create_spend_chart(categories: 'list[Category]'):
             letter_index = i - 12
 
             for category_data in categories_data:
-                category_name = category_data.get('name')
+                category_name = category_data.name
                 row_word += f'{get_str_char_or_space(category_name, letter_index)}  '
-                amount = category_data.get('percent')
+                amount = category_data.percent
                 plus = 'o  '
                 if n > amount:
                     plus = '   '

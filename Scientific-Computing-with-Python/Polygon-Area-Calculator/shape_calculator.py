@@ -9,7 +9,7 @@ class Rectangle:
     def set_width(self, width: 'int'):
         self.width = width
 
-    def set_height(self, height):
+    def set_height(self, height: 'int'):
         self.height = height
 
     def get_area(self):
@@ -18,7 +18,7 @@ class Rectangle:
     def get_perimeter(self):
         return (2 * self.width) + (2 * self.height)
 
-    def get_diagonal(self):
+    def get_diagonal(self) -> 'int|float':
         return (self.width ** 2 + self.height ** 2) ** .5
 
     def get_picture(self):
@@ -40,17 +40,15 @@ class Square(Rectangle):
     def __str__(self) -> str:
         return f'Square(side={self.width})'
 
-    def set_width(self, width: 'int'):
-        self.width = width
-        self.height = width
-
-    def set_height(self, height: 'int'):
-        self.width = height
-        self.height = height
-
     def set_side(self, side: 'int'):
         self.width = side
         self.height = side
+
+    def set_width(self, width: 'int'):
+        self.set_side(width)
+
+    def set_height(self, height: 'int'):
+        self.set_side(height)
 
 
 test = Rectangle(10, 2)
