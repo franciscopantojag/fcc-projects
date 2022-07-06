@@ -22,8 +22,7 @@ def add_time(start: str, duration: str, day_of_week: str = None):
     if result_hours == 0:
         result_hours = 12
 
-    n_zero_minutes = '0' if len(str(result_minutes)) < 2 else ''
-    final_result = f'{result_hours}:{n_zero_minutes}{result_minutes} {result_am_pm}'
+    final_result = f'{result_hours}:{result_minutes:02} {result_am_pm}'
 
     if day_of_week:
         week_day = day_of_week.lower()
